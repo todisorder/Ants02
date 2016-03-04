@@ -26,13 +26,13 @@ public:
     string Comm;
     
     Numerics (){
-        cout << "// Comments:" << endl;
+        cout << "//Introduzir Comentários" << endl;
         getline(cin, Comm, '\n');               // Nice... de http://www.cprogramming.com/tutorial/string.html
-        cout << "// Number of x intervals:" << endl;
+        cout << "// CLASSE! Introduzir o numero de subintervalos em x pretendidos" << endl;
         cin >> numxx ;
-        cout << "// Number of y intervals:" << endl;
+        cout << "//Introduzir o numero de subintervalos em y pretendidos" << endl;
         cin >> numyy ;
-        cout << "// Number of time iterations:" << endl;
+        cout << "//Introduzir o numero de iterações em tempo pretendidas" << endl;
         cin >> numiter ;
         cin.ignore() ;
         // Because C++!! ver http://stackoverflow.com/questions/12691316/getline-does-not-work-if-used-after-some-inputs

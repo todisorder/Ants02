@@ -1,0 +1,2 @@
+unset parametric; splot 100*exp(-(x*x)*100)
+set parametric; plot "100/AntPos.txt" w lp

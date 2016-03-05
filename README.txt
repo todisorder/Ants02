@@ -5,7 +5,18 @@ https://github.com/todisorder/Ants02.git
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 4 Mar 2016
 
-Agora vou fazer com feromona qualquer,
+>> Neste momento: dá erro do my_matrix quando chega ao limite do domínio. é normal.
+Não posso calcular muitas iterações por causa disso.
+No plots2.plt está um plot com a sobreposição da feromona e do trajeto.
+
+>> plots de 
+http://stackoverflow.com/questions/33774180/transparent-background-picture-and-the-color-of-certain-points
+e de
+http://gnuplot-surprising.blogspot.com.br/2011/09/gnuplot-background-image.html
+Ver também este que dá círculos nos pontos:
+http://stackoverflow.com/questions/20252698/r-style-point-background-in-gnuplot
+
+>> Agora vou fazer com feromona qualquer,
 mas não produzida por ela.
 
 

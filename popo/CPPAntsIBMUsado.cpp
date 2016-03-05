@@ -26,13 +26,13 @@ public:
     string Comm;
     
     Numerics (){
-        cout << "//Introduzir Comentários" << endl;
+        cout << "// Comments:" << endl;
         getline(cin, Comm, '\n');               // Nice... de http://www.cprogramming.com/tutorial/string.html
-        cout << "// CLASSE! Introduzir o numero de subintervalos em x pretendidos" << endl;
+        cout << "// Number of x intervals:" << endl;
         cin >> numxx ;
-        cout << "//Introduzir o numero de subintervalos em y pretendidos" << endl;
+        cout << "// Number of y intervals:" << endl;
         cin >> numyy ;
-        cout << "//Introduzir o numero de iterações em tempo pretendidas" << endl;
+        cout << "// Number of time iterations:" << endl;
         cin >> numiter ;
         cin.ignore() ;
         // Because C++!! ver http://stackoverflow.com/questions/12691316/getline-does-not-work-if-used-after-some-inputs
@@ -58,7 +58,7 @@ normal_distribution<double> Normal(0.,.5);      //Normal(0.,1.)
 // Normal(mean,stddev)
 // Usage:
 // double number = Normal(generator);
-static double const Turn_off_random = .01;
+static double const Turn_off_random = 0.;          //.01;
 //  ^^^ 0. = No Random!
 
 //	Parameter for Regularizing Function
@@ -241,7 +241,7 @@ void define_trail (int xx,int yy, my_matrix topography)
             }
         }
     }
-    for (int l=1; l<=30; l++) {      //l<= 20.   Regulariza‹o
+    for (int l=1; l<=10; l++) {      //l<= 20.   Regulariza‹o
         for(int i=1;i<xx-1;i++){
             for(int j=1;j<yy-1;j++){
                 topography(i,j)= 0.25*(topography(i-1,j) + topography(i+1,j) + topography(i,j-1) + topography(i,j+1));
@@ -267,13 +267,15 @@ void define_trail (int xx,int yy, my_matrix topography)
     for(int j=0;j<xx;j++){
         for(int k=0;k<yy;k++){
             topography(j,k) = max(topography(j,k),-0.04);  //-0.02  //-0.035
-            topography(j,k) *= 4.;
+//            topography(j,k) += 0.04;
+            topography(j,k) += 0.4;
+            topography(j,k) *= 14.;
         }
     }
     //   END Random topography
     for(int j=0;j<xx;j++){
         for(int k=0;k<yy;k++){
-            topography(j,k) = 0.;        //Para testar com zero
+//            topography(j,k) = 0.;        //Para testar com zero
         }
     }
 }
@@ -357,11 +359,27 @@ double PheromoneConcentration (double Xpos, double Ypos, Numerics data, my_matri
 //
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
-double PheromoneGradientX (double Xpos, double Ypos)
+double PheromoneGradientX (double Xpos, double Ypos, Numerics data, my_matrix trail)
 {
     double aux = 0.;
+    double delta_x;
+    delta_x = (x_2-x_1)/data.numxx;
+    double delta_y;
+    delta_y = (y_2-y_1)/data.numyy;
+    double iofXpos = (Xpos - x_1)/delta_x;
+    double jofYpos = (Ypos - y_1)/delta_y;
     
-    aux = - 0.*1.*PheroNarrow*Sinal(Xpos)*exp(-PheroNarrow*abs(Xpos));
+    if (iofXpos<data.numxx) {
+        aux =  PheromoneConcentration(Xpos,Ypos,data,trail) - PheromoneConcentration(Xpos+delta_x,Ypos,data,trail) ;
+    } else {
+        aux = 0.;       // TEMP!!
+    }
+
+    
+    
+    
+    
+//    aux = - 1.*PheroNarrow*Sinal(Xpos)*exp(-PheroNarrow*abs(Xpos));
     
     return aux;
     
@@ -384,10 +402,23 @@ double PheromoneGradientX (double Xpos, double Ypos)
 //
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
-double PheromoneGradientY (double Xpos, double Ypos)
+double PheromoneGradientY (double Xpos, double Ypos, Numerics data, my_matrix trail)
 {
     double aux = 0.;
+    double delta_x;
+    delta_x = (x_2-x_1)/data.numxx;
+    double delta_y;
+    delta_y = (y_2-y_1)/data.numyy;
+    double iofXpos = (Xpos - x_1)/delta_x;
+    double jofYpos = (Ypos - y_1)/delta_y;
     
+    if (jofYpos<data.numyy) {
+        aux =  PheromoneConcentration(Xpos,Ypos,data,trail) - PheromoneConcentration(Xpos,Ypos+delta_y,data,trail) ;
+    } else {
+        aux = 0.;       // TEMP!!
+    }
+
+
     return aux;
     
 }
@@ -501,15 +532,15 @@ double ForceX(double AntXpos,double  AntYpos,double  AntVelX, double  AntVelY, N
     aux = (2./3.) * pow(SENSING_AREA_RADIUS,3.) * Lambda * cos(Angle(AntVelX,AntVelY))
     * PheromoneConcentration(AntXpos,AntYpos,data,trail) * sin(SensingAreaHalfAngle)
     + (1./4.)*pow(SENSING_AREA_RADIUS,4.) * Lambda
-    * (SensingAreaHalfAngle * PheromoneGradientX(AntXpos,AntYpos)
-       + A11 * PheromoneGradientX(AntXpos,AntYpos) + A12 * PheromoneGradientY(AntXpos,AntYpos))
+    * (SensingAreaHalfAngle * PheromoneGradientX(AntXpos,AntYpos,data,trail)
+       + A11 * PheromoneGradientX(AntXpos,AntYpos,data,trail) + A12 * PheromoneGradientY(AntXpos,AntYpos,data,trail))
     ;
     
 	auxX = PheromoneConcentration(AntXpos,AntYpos,data,trail)*SENSING_AREA_RADIUS*SENSING_AREA_RADIUS
 		* SensingAreaHalfAngle 
-        + PheromoneGradientX(AntXpos,AntYpos) * (2./3.) * pow(SENSING_AREA_RADIUS,3.)
+        + PheromoneGradientX(AntXpos,AntYpos,data,trail) * (2./3.) * pow(SENSING_AREA_RADIUS,3.)
         * cos(Angle(AntVelX,AntVelY)) * sin(SensingAreaHalfAngle)
-        + PheromoneGradientY(AntXpos,AntYpos) * (2./3.) * pow(SENSING_AREA_RADIUS,3.)
+        + PheromoneGradientY(AntXpos,AntYpos,data,trail) * (2./3.) * pow(SENSING_AREA_RADIUS,3.)
         * sin(Angle(AntVelX,AntVelY)) * sin(SensingAreaHalfAngle);
 	
 	auxX = RegularizingFunction(auxX);
@@ -541,15 +572,15 @@ double ForceY(double AntXpos,double  AntYpos,double  AntVelX, double  AntVelY, N
     aux = (2./3.) *  pow(SENSING_AREA_RADIUS,3.) * Lambda * sin(Angle(AntVelX,AntVelY))
     * PheromoneConcentration(AntXpos,AntYpos,data,trail) * sin(SensingAreaHalfAngle)
     + (1./4.)*pow(SENSING_AREA_RADIUS,4.) * Lambda
-    * (SensingAreaHalfAngle * PheromoneGradientY(AntXpos,AntYpos)
-       + A21 * PheromoneGradientX(AntXpos,AntYpos) + A22 * PheromoneGradientY(AntXpos,AntYpos))
+    * (SensingAreaHalfAngle * PheromoneGradientY(AntXpos,AntYpos,data,trail)
+       + A21 * PheromoneGradientX(AntXpos,AntYpos,data,trail) + A22 * PheromoneGradientY(AntXpos,AntYpos,data,trail))
     ;
     
     auxY = PheromoneConcentration(AntXpos,AntYpos,data,trail)*SENSING_AREA_RADIUS*SENSING_AREA_RADIUS
     * SensingAreaHalfAngle
-    + PheromoneGradientX(AntXpos,AntYpos) * (2./3.) * pow(SENSING_AREA_RADIUS,3.)
+    + PheromoneGradientX(AntXpos,AntYpos,data,trail) * (2./3.) * pow(SENSING_AREA_RADIUS,3.)
     * cos(Angle(AntVelX,AntVelY)) * sin(SensingAreaHalfAngle)
-    + PheromoneGradientY(AntXpos,AntYpos) * (2./3.) * pow(SENSING_AREA_RADIUS,3.)
+    + PheromoneGradientY(AntXpos,AntYpos,data,trail) * (2./3.) * pow(SENSING_AREA_RADIUS,3.)
     * sin(Angle(AntVelX,AntVelY)) * sin(SensingAreaHalfAngle);
 	
 	auxY = RegularizingFunction(auxY);
@@ -848,6 +879,7 @@ int main (void){
     string DIR;
 	double xx, yy;
     
+    
     int isAbort = 0;
     
 //    cout << "// Comments:" << endl;
@@ -872,6 +904,11 @@ int main (void){
 	xx = Data.numxx;
 	yy = Data.numyy;
 	tt = Data.numiter;
+    double delta_x;
+    delta_x = (x_2-x_1)/Data.numxx;
+    double delta_y;
+    delta_y = (y_2-y_1)/Data.numyy;
+
     
     my_matrix trail(xx,yy); define_trail(xx,yy,trail);
 
@@ -960,16 +997,27 @@ int main (void){
     // Escrever resultados
     /////////////////////////////
 
-//    ofstream outfile_solucao1;
-//    outfile_solucao1.open(DIR2+"LastPrey.txt");
+//    ofstream outfile_solucao5;
+//    outfile_solucao5.open(DIR2+"Trail.txt");
 //    for(int j=0;j<xx;j++){
 //        for(int k=0;k<yy;k++){
-//            outfile_solucao1 << Prey_old(j,k) << "\t";
+//            outfile_solucao5 << trail(j,k) << "\t";
 //            if(k==yy-1)
-//            outfile_solucao1 << endl;
+//                outfile_solucao5 << endl;
 //        }
 //    }
-//    outfile_solucao1.close();
+//    outfile_solucao5.close();
+    ofstream outfile_solucao5;
+    outfile_solucao5.open(DIR2+"Trail.txt");
+    for(int j=0;j<xx;j++){
+        for(int k=0;k<yy;k++){
+            outfile_solucao5 << x_1 + j*delta_x << "\t"<< y_1 + k*delta_y << "\t" << trail(j,k) << endl;
+            if(k==yy-1)
+                outfile_solucao5 << endl;
+        }
+    }
+    outfile_solucao5.close();
+
     
     
     

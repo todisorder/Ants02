@@ -19,10 +19,10 @@ public:
     
     double &operator() (int i,int j){
         if(i>=dim1){
-            cout << "erro" << endl;
+            cout << "erro x" << endl;
             exit(1);}
         if(j>=dim2){
-            cout << "erro" << endl;
+            cout << "erro y" << endl;
             exit(1);}
         
         return elementos[i*dim2+j];

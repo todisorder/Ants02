@@ -58,7 +58,7 @@ normal_distribution<double> Normal(0.,.5);      //Normal(0.,1.)
 // Normal(mean,stddev)
 // Usage:
 // double number = Normal(generator);
-static double const Turn_off_random = 0.;          //.01;
+static double const Turn_off_random = 0.*0.02;          //.01;
 //  ^^^ 0. = No Random!
 
 //	Parameter for Regularizing Function
@@ -225,19 +225,20 @@ void define_trail (int xx,int yy, my_matrix topography)
     int aux_5 = 5;
     double value = 300.;
     my_matrix temptop(xx,yy); temptop.matrix("zero");
+    double Xpos;
     
     
     //    Random topography         // http://www.cplusplus.com/reference/cstdlib/rand/?kw=rand
     ////////////////////////////////////////////////////////
-    //    srand (time(NULL));
-    srand (3);
+//        srand (time(NULL));
+    srand (5);
     for(int i=0;i<xx;i++){
         for(int j=0;j<yy;j++){
             
             aux = rand() % 10 + 10; aux = 1./aux;
             topography(i,j)=10.*aux - .75;
             if (i<aux_5 || i>xx-aux_5 || j<aux_5 || j>yy-aux_5) {
-                topography(i,j)=-0.75;
+//                topography(i,j)=-0.75;
             }
         }
     }
@@ -266,9 +267,12 @@ void define_trail (int xx,int yy, my_matrix topography)
     }
     for(int j=0;j<xx;j++){
         for(int k=0;k<yy;k++){
-            topography(j,k) = max(topography(j,k),-0.04);  //-0.02  //-0.035
+//            topography(j,k) = max(topography(j,k),-0.04);  //-0.02  //-0.035
 //            topography(j,k) += 0.04;
-            topography(j,k) += 0.4;
+//            topography(j,k) *= 14.;
+            
+            topography(j,k) = max(topography(j,k),-0.07);  //-0.02  //-0.035
+            topography(j,k) += 0.07;
             topography(j,k) *= 14.;
         }
     }
@@ -276,6 +280,8 @@ void define_trail (int xx,int yy, my_matrix topography)
     for(int j=0;j<xx;j++){
         for(int k=0;k<yy;k++){
 //            topography(j,k) = 0.;        //Para testar com zero
+            Xpos = x_1 + j*delta_x;
+            topography(j,k) = 1.*exp(-PheroNarrow*abs(Xpos)) * topography(j,k);
         }
     }
 }
@@ -369,8 +375,9 @@ double PheromoneGradientX (double Xpos, double Ypos, Numerics data, my_matrix tr
     double iofXpos = (Xpos - x_1)/delta_x;
     double jofYpos = (Ypos - y_1)/delta_y;
     
-    if (iofXpos<data.numxx) {
-        aux =  PheromoneConcentration(Xpos,Ypos,data,trail) - PheromoneConcentration(Xpos+delta_x,Ypos,data,trail) ;
+    if (iofXpos<data.numxx-1) {
+        aux =  PheromoneConcentration(Xpos+delta_x,Ypos,data,trail) -  PheromoneConcentration(Xpos,Ypos,data,trail) ;
+        aux = aux/delta_x;
     } else {
         aux = 0.;       // TEMP!!
     }
@@ -412,8 +419,9 @@ double PheromoneGradientY (double Xpos, double Ypos, Numerics data, my_matrix tr
     double iofXpos = (Xpos - x_1)/delta_x;
     double jofYpos = (Ypos - y_1)/delta_y;
     
-    if (jofYpos<data.numyy) {
-        aux =  PheromoneConcentration(Xpos,Ypos,data,trail) - PheromoneConcentration(Xpos,Ypos+delta_y,data,trail) ;
+    if (jofYpos<data.numyy-1) {
+        aux =   PheromoneConcentration(Xpos,Ypos+delta_y,data,trail) - PheromoneConcentration(Xpos,Ypos,data,trail) ;
+        aux = aux/delta_y;
     } else {
         aux = 0.;       // TEMP!!
     }

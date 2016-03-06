@@ -105,6 +105,7 @@
 #unset multiplot
 reset
 set term png size 600,600
+set palette gray negative
 set output "Trail.png"
 set size ratio -1
 set view map
@@ -121,6 +122,7 @@ splot "popo/Trail.txt"  notitle w pm3d
 #set term x11
 set output "graph.png"
 #splot "popo/Trail.txt"  notitle w pm3d
-plot "Trail.png" binary filetype=png with rgbimage , "popo/Antpos.txt"  using (10*($1)+300):(10*($2)+300) w l
+set palette 
+plot "Trail.png" binary filetype=png with rgbimage, "popo/Antpos.txt"  using (10*($1)+300):(10*($2)+300) w l
 set term x11
-
+reset

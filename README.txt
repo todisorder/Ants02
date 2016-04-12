@@ -5,6 +5,8 @@ https://github.com/todisorder/Ants02.git
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 4 Mar 2016
 
+>> Resolvi isso mas só temporário com zero. Também alterei a regularização para ser periódico.
+
 >> Neste momento: dá erro do my_matrix quando chega ao limite do domínio. é normal.
 Não posso calcular muitas iterações por causa disso.
 No plots2.plt está um plot com a sobreposição da feromona e do trajeto.

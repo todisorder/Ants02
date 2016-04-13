@@ -5,9 +5,6 @@ https://github.com/todisorder/Ants02.git
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 4 Mar 2016
 
->> Atenção que mudei l.787, 790 o random walk. Pus um delta_t a multiplicar.
-	Isto porque não sei o que estou a fazer com o RW.
-
 >> Resolvi isso mas só temporário com zero. Também alterei a regularização para ser periódico.
 
 >> Neste momento: dá erro do my_matrix quando chega ao limite do domínio. é normal.

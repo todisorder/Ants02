@@ -115,7 +115,7 @@ static double const Lambda = 1.;         //10./SENSING_AREA_RADIUS;????
 
 // tempo final
 //static double const TFINAL = 0.1;
-static double const delta_t = 0.05;   //     0.005
+static double const delta_t = 0.1;   //     0.005
 
 
 ////////////////////////////

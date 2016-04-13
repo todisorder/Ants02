@@ -58,7 +58,7 @@ normal_distribution<double> Normal(0.,1.);      //Normal(0.,1.)
 // Normal(mean,stddev)
 // Usage:
 // double number = Normal(generator);
-static double const Turn_off_random = 1.*1.;    //*0.02;
+static double const Turn_off_random = 1.*0.1;    //*0.02;
 //  ^^^ 0. = No Random!
 
 //	Parameter for Regularizing Function
@@ -106,7 +106,7 @@ static double const SensingAreaHalfAngle = Pi/3.;         //
 //static double const Lambda = .5* (3./2.) *(1./(SensingAreaHalfAngle * pow(SENSING_AREA_RADIUS,3.)));        //
 
 //	With Weber's Law, Lambda may be ~ 1 ??
-static double const Lambda = 10.;         //10./SENSING_AREA_RADIUS;????
+static double const Lambda = 1.;         //10./SENSING_AREA_RADIUS;????
 
 //////////////////////////////////////////////////////
 // End Ant parameters
@@ -115,7 +115,7 @@ static double const Lambda = 10.;         //10./SENSING_AREA_RADIUS;????
 
 // tempo final
 //static double const TFINAL = 0.1;
-static double const delta_t = 0.1;   //     0.005
+static double const delta_t = 0.05;   //     0.005
 
 
 ////////////////////////////
@@ -178,7 +178,7 @@ int ChangedSide = 0;
 /////////////////////////////////////////////////
 void InitialPosition (double& Xini, double& Yini)
 {
-    Xini = -5.;     //-1.
+    Xini = -0.;     //-5.
     Yini = 0.;      //0.
 }
 /////////////////////////////////////////////////
@@ -784,10 +784,10 @@ void AntWalk (int tt, int icurrent, double& AntXposOld, double& AntYposOld, doub
 //  Com relaxação:::
     
     AntVelXNew = AntVelXOld + delta_t * ( -(1./TAU)*( AntVelXOld - ForceXvalue) )
-    + RandomWalkVelXnew * Turn_off_random;
+    + delta_t * RandomWalkVelXnew * Turn_off_random;
     
     AntVelYNew = AntVelYOld + delta_t * ( -(1./TAU)*( AntVelYOld - ForceYvalue) )
-    + RandomWalkVelYnew * Turn_off_random;
+    + delta_t * RandomWalkVelYnew * Turn_off_random;
 
 //  Sem relaxação:::
     

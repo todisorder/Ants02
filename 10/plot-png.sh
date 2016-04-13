@@ -51,7 +51,7 @@ splot \"Trail.txt\"  notitle w pm3d
 set output \"./Plots/graph.png\"
 #splot "popo/Trail.txt"  notitle w pm3d
 set palette
-plot \"./Plots/Trail.png\" binary filetype=png with rgbimage, \"Antpos.txt\"  using (10*(\$1)+300):(10*(\$2)+300) w l
+plot \"./Plots/Trail.png\" binary filetype=png with rgbimage, \"AntPos.txt\"  using (10*(\$1)+300):(10*(\$2)+300) w l
 set term x11
 reset
 

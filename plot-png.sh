@@ -44,7 +44,7 @@ set tmargin at screen 1
 #There shold be no key tics and border
 unset key
 unset tics
-unset border
+#unset border
 unset colorbox
 splot \"Trail.txt\"  notitle w pm3d
 #set term x11

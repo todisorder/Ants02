@@ -76,7 +76,7 @@ static double const t_hat_in_seconds = 1.;
 static double const X_hat_in_cm = 1.73;
 
 //  Relaxation time tau em segundos:
-static double const tau = .9;         //    0.5
+static double const tau = .5;         //    0.5
 
 //  Nondimensional relaxation TAU = (t_hat / tau)^(-1).
 //  Deve ser o relaxation time nas unidades t_hat.
@@ -122,10 +122,10 @@ static double const delta_t = 0.05;   //     0.005
 //  Definição do  Domínio
 ////////////////////////////
 // extremo inferior do intervalo em x (cm)
-static double const x_1_cm = -50.;
+static double const x_1_cm = -25.;
 
 // extremo superior do intervalo em x (cm)
-static double const x_2_cm = 50.;
+static double const x_2_cm = 25.;
 
 // extremo inferior do intervalo em y (cm)
 static double const y_1_cm =  -50.;
@@ -231,7 +231,7 @@ void define_trail (int xx,int yy, my_matrix trail)
     //    Random trail         // http://www.cplusplus.com/reference/cstdlib/rand/?kw=rand
     ////////////////////////////////////////////////////////
 //        srand (time(NULL));
-    srand (5);
+    srand (6);
     for(int i=0;i<xx;i++){
         for(int j=0;j<yy;j++){
             
@@ -331,9 +331,6 @@ double Sinal(double aa){
 /////////////////////////////////////////////////
 //
 //  Define Pheromone
-//      Definida como função de (x,y), tenho de dar uma
-//      fórmula explícita!
-//      Mais tarde, será numérico e vou precisar de interpolações, etc.
 //
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -346,8 +343,12 @@ double PheromoneConcentration (double Xpos, double Ypos, Numerics data, my_matri
     double aux = 0.;
 	double iofXpos = (Xpos - x_1)/delta_x;  
 	double jofYpos = (Ypos - y_1)/delta_y;
-	
+    
 	aux = trail(iofXpos,jofYpos);
+
+//    cout << "iofXpos = " << iofXpos << endl;
+//    cout << "jofYpos = " << jofYpos << endl;
+//    cout << "trail = " << aux << endl;
 
 
 //    aux = 1.*exp(-PheroNarrow*abs(Xpos));
@@ -895,6 +896,17 @@ int main (void){
     string DIR;
 	double xx, yy;
     
+    
+    my_matrix TEST(5,5);
+    for (int i=0; i<5; i++) {
+        for (int j=0; j<5; j++) {
+            TEST(i,j) = i+j;
+        }
+    }
+
+    cout << "TEST(1,1) = " << TEST(1,1) << endl;
+    cout << "TEST(1.2,1.3) = " << TEST(1.2,1.3) << endl;
+    cout << "TEST(1.8,1.9) = " << TEST(1.8,1.9) << endl;
     
     int isAbort = 0;
     

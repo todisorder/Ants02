@@ -3,7 +3,7 @@
 #############################################################
 # dt = 0.05
 #	
-#Iter: 20000
+#Iter: 10
 ------------------------------------------------------
 Space scale X_hat_in_cm (cm)       1.73
 Time scale t_hat_in_seconds (sec)       1
@@ -13,8 +13,8 @@ Sensing Half Angle             Pi/3
 Lambda                         1
 ------------------------------------------------------
 delta t (seconds) = 0.05
-Tfinal (seconds) = 1000
-Tfinal (minutes) = 16.6667
-Tfinal (hours) = 0.277778
+Tfinal (seconds) = 0.5
+Tfinal (minutes) = 0.00833333
+Tfinal (hours) = 0.000138889
 ------------------------------------------------------
  

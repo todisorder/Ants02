@@ -3,7 +3,12 @@ Ants IBM GitHub:
 New Repository
 https://github.com/todisorder/Ants02.git
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-4 Mar 2016
+
+
+>> Comecei a alterar matriz.h. O objetivo é interpolar o gradiente com um método least squares.
+	Para isso preciso de todas as operações em matrizes.
+
+>> 19 abril 2016. algumas melhorias tipo LastResult.
 
 >> Atenção que mudei l.787, 790 o random walk. Pus um delta_t a multiplicar.
 	Isto porque não sei o que estou a fazer com o RW.
@@ -24,6 +29,7 @@ http://stackoverflow.com/questions/20252698/r-style-point-background-in-gnuplot
 >> Agora vou fazer com feromona qualquer,
 mas não produzida por ela.
 
+4 Mar 2016
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Ants IBM GitHub:

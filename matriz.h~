@@ -1,0 +1,109 @@
+
+
+// Declarations
+class my_matrix;
+my_matrix Inverse(const my_matrix& a);
+
+class my_matrix {
+public:
+    int dim1,dim2;
+    double * elementos;
+    
+    
+    my_matrix (int m,int n)
+    {
+        dim1=m;
+        dim2=n;
+        elementos=new double[m*n];
+   	 for (int i=0; i< dim1 ; i++) {
+    	    for (int j=0; j<dim2; j++) {
+            	elementos[i*dim2+j] = 0.;
+    	    }
+    	}
+    }
+    //    ~my_matrix()
+    //    {
+    //        delete[] elementos;
+    //    }
+    
+    
+    double &operator() (int i,int j){
+        if(i>=dim1){
+            cout << "erro x" << endl;
+            exit(1);}
+        if(j>=dim2){
+            cout << "erro y" << endl;
+            exit(1);}
+        
+        return elementos[i*dim2+j];
+    }
+    
+
+    
+    
+    void print (){
+        int i,j;
+        for(i=0;i<dim1;i++)
+            for(j=0;j<dim2;j++){
+                cout << operator()(i,j) << " ";
+                if(j==dim2-1)
+                    cout << endl;
+            }
+    }
+    
+    
+   
+    
+    
+};
+
+// Ver http://condor.depaul.edu/ntomuro/courses/262/notes/lecture3.html
+my_matrix operator+(const my_matrix &M1, const my_matrix &M2)
+{
+    my_matrix soma (M1.dim1, M1.dim2);
+    for (int i=0; i< soma.dim1 ; i++) {
+        for (int j=0; j<soma.dim2; j++) {
+            soma.elementos[i*M1.dim2+j] = M1.elementos[i*M1.dim2+j] + M2.elementos[i*M1.dim2+j];
+        }
+    }
+    return soma;
+}
+my_matrix operator-(const my_matrix &M1, const my_matrix &M2)
+{
+    my_matrix soma (M1.dim1, M1.dim2);
+    for (int i=0; i< soma.dim1 ; i++) {
+        for (int j=0; j<soma.dim2; j++) {
+            soma.elementos[i*M1.dim2+j] = M1.elementos[i*M1.dim2+j] - M2.elementos[i*M1.dim2+j];
+        }
+    }
+    return soma;
+}
+my_matrix operator*(const my_matrix &M1, const my_matrix &M2)
+{
+    my_matrix prod (M1.dim1, M1.dim2);
+	double aux = 0.;
+    for (int i=0; i< prod.dim1 ; i++) {
+        for (int j=0; j<prod.dim2; j++) {
+			for (int k=0; j<prod.dim2; j++) {
+				aux += M1.elementos[i*M1.dim2+k] * M2.elementos[k*M1.dim2+j];
+			}
+            prod.elementos[i*M1.dim2+j] = aux;
+			aux = 0.;
+        }
+    }
+    return prod;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

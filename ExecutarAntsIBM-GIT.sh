@@ -5,7 +5,7 @@ rm U_*;
 echo "Results folder name:"
 read Folder
 Version="-02"
-rm -r "$Folder"
+[ -d "$Folder" ] && rm -r "$Folder"
 mkdir "$Folder"
 cp antsibm"$Version"  "$Folder"
 cp AntsIBM"$Version".cpp  "$Folder"/CPPAntsIBMUsado.cpp
@@ -15,10 +15,14 @@ cd "$Folder"
 
 ./antsibm"$Version" &&
 mkdir Plots
-mkdir Resultados
 sh plot-png.sh &&
 #gnuplot plots-Mass.plt
 #cp ../LogsLast.txt .
+
+[ ! -d ../LastResult ] && mkdir ../LastResult
+touch ../LastResult/Paranaochatearcomerrosdorm.txt
+rm -r ../LastResult/*
+cp -r * ../LastResult/
 
 echo "Done!"
 

@@ -4,7 +4,7 @@ rm plots.plt
 touch plots.plt;
 touch ./Plots/foo
 rm ./Plots/*
-mv ./Resultados/* . &&
+#mv ./Resultados/* . &&
 echo "reset" >> plots.plt
 echo "set parametric" >> plots.plt
 echo "Generating gnuplot source code..."
@@ -43,8 +43,8 @@ set bmargin at screen 0
 set tmargin at screen 1
 #There shold be no key tics and border
 unset key
-unset tics
-unset border
+#unset tics
+#unset border
 unset colorbox
 splot \"Trail.txt\"  notitle w pm3d
 #set term x11
@@ -76,7 +76,7 @@ gnuplot plots.plt;
 #convert  -delay 5 ./Plots/U_food_p*.png ./Plots/myanimationU_food_phero.mov
 #echo "Done"
 echo "Copying files..."
-rm ./Resultados/*
+#rm ./Resultados/*
 #mv Pr* ./Resultados
 #mv Vel_* ./Resultados
 #rm ~/Dropbox/Formigas/*.mov

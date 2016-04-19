@@ -1,3 +1,4 @@
+reset
 set parametric
 set term png font "arial,12"  size 240, 840
 #unset xtics
@@ -33,8 +34,8 @@ set bmargin at screen 0
 set tmargin at screen 1
 #There shold be no key tics and border
 unset key
-unset tics
-unset border
+#unset tics
+#unset border
 unset colorbox
 splot "Trail.txt"  notitle w pm3d
 #set term x11

@@ -4,7 +4,7 @@
 # include <cmath>
 # include <string>
 #include <sstream>
-#include <iomanip> 
+#include <iomanip>  
 #include <random>
 
 using namespace std;
@@ -76,7 +76,7 @@ static double const t_hat_in_seconds = 1.;
 static double const X_hat_in_cm = 1.73;
 
 //  Relaxation time tau em segundos:
-static double const tau = .5;         //    0.5
+static double const tau = .25;         //    0.5
 
 //  Nondimensional relaxation TAU = (t_hat / tau)^(-1).
 //  Deve ser o relaxation time nas unidades t_hat.
@@ -224,7 +224,7 @@ void define_trail (int xx,int yy, my_matrix trail)
     double aux = 0.;
     int aux_5 = 5;
     double value = 300.;
-    my_matrix temptop(xx,yy); temptop.matrix("zero");
+    my_matrix temptop(xx,yy); // temptop.matrix("zero");
     double Xpos;
     
     
@@ -344,11 +344,11 @@ double PheromoneConcentration (double Xpos, double Ypos, Numerics data, my_matri
 	double iofXpos = (Xpos - x_1)/delta_x;  
 	double jofYpos = (Ypos - y_1)/delta_y;
     
-	aux = trail(iofXpos,jofYpos);
+	aux = trail(iofXpos,jofYpos);               ////    Ele arredonda por baixo o indice (parte inteira).
 
-    cout << "iofXpos = " << iofXpos << endl;
-    cout << "jofYpos = " << jofYpos << endl;
-    cout << "trail = " << aux << endl;
+//    cout << "iofXpos = " << iofXpos << endl;
+//    cout << "jofYpos = " << jofYpos << endl;
+//    cout << "trail = " << aux << endl;
 
 
 //    aux = 1.*exp(-PheroNarrow*abs(Xpos));
@@ -670,6 +670,9 @@ void PrintInfo(double delta_t, string COMM, int tt){
     tempfile << "Sensing Half Angle             Pi/" << Pi/SensingAreaHalfAngle << endl;
     tempfile << "Lambda                         " << Lambda << endl;
     tempfile << "------------------------------------------------------" << endl;
+    tempfile << "Domain in cm: = [" << x_1_cm <<" , "<< x_2_cm << "] x [" << y_1_cm <<" , "<< y_2_cm << "]" << endl;
+    tempfile << "Domain in X_hat: = [" << x_1 <<" , "<< x_2 << "] x [" << y_1 <<" , "<< y_2 << "]" << endl;
+    tempfile << "------------------------------------------------------" << endl;
     tempfile << "delta t (seconds) = " << delta_t * t_hat_in_seconds << endl;
     tempfile << "Tfinal (seconds) = " << tt*delta_t * t_hat_in_seconds << endl;
     tempfile << "Tfinal (minutes) = " << tt*delta_t * t_hat_in_seconds / 60.<< endl;
@@ -897,6 +900,8 @@ int main (void){
 	double xx, yy;
     
     
+
+    
     int isAbort = 0;
     
 //    cout << "// Comments:" << endl;
@@ -946,22 +951,27 @@ int main (void){
     
     ofstream AntPos(DIR2+"AntPos.txt");
     
+    AntPos << "###  Units are X_hat = " << X_hat_in_cm << "cm." << endl;
     AntPos << AntXposOld << "\t" << AntYposOld << endl;
     
     ofstream AntVel(DIR2+"AntVel.txt");
     
+    AntVel << "###  Units are X_hat = " << X_hat_in_cm << "cm." << endl;
     AntVel << AntVelXOld << "\t" << AntVelYOld << endl;
     
     ofstream AntVelAngle(DIR2+"AntVelAngle.txt");
     
+    AntVelAngle << "###  Units are X_hat = " << X_hat_in_cm << "cm." << endl;
     AntVelAngle << Angle(AntVelXOld,AntVelYOld) << endl;
     
     ofstream AntVelRadius(DIR2+"AntVelRadius.txt");
     
+    AntVelRadius << "###  Units are X_hat = " << X_hat_in_cm << "cm." << endl;
     AntVelRadius << Radius(AntVelXOld,AntVelYOld) << endl;
 
     ofstream AntDistance(DIR2+"AntDistance.txt");
     
+    AntDistance << "###  Units are X_hat = " << X_hat_in_cm << "cm." << endl;
     AntDistance << 0. <<"\t" << 0. << endl;
 
     /////////////////////////////
@@ -1045,6 +1055,17 @@ int main (void){
 
     
     cout << COMM << endl;
+
+
+	my_matrix aaa(3,3);
+	my_matrix bbb(3,3);
+aaa(0,0) = 1.;aaa(1,0) = 1.;aaa(1,1) = 2.;
+bbb(0,0) = 2.;bbb(0,1) = 1.;bbb(2,2) = 2.;
+	aaa.print();
+	bbb.print();
+	my_matrix ccc(3,3);
+	ccc = aaa*10.;
+	ccc.print();
     
     return 0;
 }

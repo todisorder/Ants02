@@ -53,13 +53,13 @@ static double const Ln2 = 0.6931471806;
 
 default_random_engine generator;
 normal_distribution<double> Normal(0.,1.);      // Normal(0.,1.)
-normal_distribution<double> SmallNormal(0.,.05);      // Normal(0.,.1)
+normal_distribution<double> SmallNormal(0.,.1);      // Normal(0.,.1)
 uniform_real_distribution<double> Uniform(0.,2.*Pi);      // Uniformly distributed angle
 //http://www.cplusplus.com/reference/random/normal_distribution/
 // Normal(mean,stddev)
 // Usage:
 // double number = Normal(generator);
-static double const Turn_off_random = 1.*1.;    //*0.02;
+static double const Turn_off_random = 1.*0.1;    //*0.02;
 //  ^^^ 0. = No Random!
 
 //	Parameter for Regularizing Function
@@ -77,7 +77,7 @@ static double const t_hat_in_seconds = 1.;
 static double const X_hat_in_cm = 1.73;
 
 //  Relaxation time tau em segundos:
-static double const tau = .3;         //    0.25
+static double const tau = .25;         //    0.5
 
 //  Nondimensional relaxation TAU = (t_hat / tau)^(-1).
 //  Deve ser o relaxation time nas unidades t_hat.
@@ -85,7 +85,7 @@ static double const tau = .3;         //    0.25
 static double const TAU = tau / t_hat_in_seconds;         //
 
 //  Sensing area radius em centimetros
-static double const SensingAreaRadius = .6;         //  .5
+static double const SensingAreaRadius = .4;         //  .5
 
 //  Sensing area radius em X_hat
 static double const SENSING_AREA_RADIUS = SensingAreaRadius / X_hat_in_cm;         //
@@ -179,7 +179,7 @@ int ChangedSide = 0;
 /////////////////////////////////////////////////
 void InitialPosition (double& Xini, double& Yini)
 {
-    Xini = -5.;     //-5.
+    Xini = -0.;     //-5.
     Yini = 0.;      //0.
 }
 /////////////////////////////////////////////////
@@ -199,7 +199,7 @@ void InitialPosition (double& Xini, double& Yini)
 void InitialVelocity (double& Vx, double& Vy)
 {
     Vx = .1;
-    Vy = .1;
+    Vy = .2;
 }
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -237,8 +237,7 @@ void define_trail (int xx,int yy, my_matrix trail)
         for(int j=0;j<yy;j++){
             
             aux = rand() % 10 + 10; aux = 1./aux;
-//            trail(i,j)=10.*aux - .75;
-            trail(i,j)=10.*aux ;
+            trail(i,j)=10.*aux - .75;
             if (i<aux_5 || i>xx-aux_5 || j<aux_5 || j>yy-aux_5) {
 //                trail(i,j)=-0.75;
             }
@@ -277,10 +276,13 @@ void define_trail (int xx,int yy, my_matrix trail)
     }
     for(int j=0;j<xx;j++){
         for(int k=0;k<yy;k++){
-            
-//            trail(j,k) = max(trail(j,k),-0.07);  //-0.02  //-0.035
-//            trail(j,k) += 0.07;
+//            trail(j,k) = max(trail(j,k),-0.04);  //-0.02  //-0.035
+//            trail(j,k) += 0.04;
 //            trail(j,k) *= 14.;
+            
+            trail(j,k) = max(trail(j,k),-0.07);  //-0.02  //-0.035
+            trail(j,k) += 0.07;
+            trail(j,k) *= 14.;
         }
     }
     //   END Random trail
@@ -340,7 +342,6 @@ double PheromoneConcentration (double Xpos, double Ypos, Numerics data, my_matri
     double delta_y;
     delta_y = (y_2-y_1)/data.numyy;
     double aux = 0.;
-    double Threshold = 0.1; //   Explained in the Readme...
 	double iofXpos = (Xpos - x_1)/delta_x;  
 	double jofYpos = (Ypos - y_1)/delta_y;
     
@@ -352,8 +353,6 @@ double PheromoneConcentration (double Xpos, double Ypos, Numerics data, my_matri
 
 
 //    aux = 1.*exp(-PheroNarrow*abs(Xpos));
-    
-    aux = max(Threshold,aux);   //  See readme...
     
     return aux;
 
@@ -538,7 +537,7 @@ double RegularizingFunction(double X)
 double ForceX(double AntXpos,double  AntYpos,double  AntVelX, double  AntVelY, Numerics data, my_matrix trail)
 {
     double aux;
-	double auxX = 1.;
+	double auxX;
     double N = Norm(AntVelX,AntVelY);
     
     double A11 = sin(2.*SensingAreaHalfAngle)/2.
@@ -562,7 +561,7 @@ double ForceX(double AntXpos,double  AntYpos,double  AntVelX, double  AntVelY, N
         + PheromoneGradientY(AntXpos,AntYpos,data,trail) * (2./3.) * pow(SENSING_AREA_RADIUS,3.)
         * sin(Angle(AntVelX,AntVelY)) * sin(SensingAreaHalfAngle);
 	
-//	auxX = RegularizingFunction(auxX);
+	auxX = RegularizingFunction(auxX);
 	
 	aux = aux/auxX;
 
@@ -578,7 +577,7 @@ double ForceX(double AntXpos,double  AntYpos,double  AntVelX, double  AntVelY, N
 double ForceY(double AntXpos,double  AntYpos,double  AntVelX, double  AntVelY, Numerics data, my_matrix trail)
 {
     double aux;
-    double auxY =1.;
+    double auxY;
     double N = Norm(AntVelX,AntVelY);
     
     double A22 = - sin(2.*SensingAreaHalfAngle)/2.
@@ -602,7 +601,7 @@ double ForceY(double AntXpos,double  AntYpos,double  AntVelX, double  AntVelY, N
     + PheromoneGradientY(AntXpos,AntYpos,data,trail) * (2./3.) * pow(SENSING_AREA_RADIUS,3.)
     * sin(Angle(AntVelX,AntVelY)) * sin(SensingAreaHalfAngle);
 	
-//	auxY = RegularizingFunction(auxY);
+	auxY = RegularizingFunction(auxY);
 	
 	aux = aux/auxY;
 
@@ -797,22 +796,14 @@ void AntWalk (int tt, int icurrent, double& AntXposOld, double& AntYposOld, doub
     // Evolu‹o
     ////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////
-
-    //
-    AntVelXNew = AntVelXOld + delta_t * ( -(1./TAU)*( AntVelXOld - ForceXvalue - RandomWalkVelXnew * Turn_off_random) );
-
-    
-    AntVelYNew = AntVelYOld + delta_t * ( -(1./TAU)*( AntVelYOld - ForceYvalue - RandomWalkVelYnew* Turn_off_random) );
-
-    
     
 //  Com relaxa‹o:::
     
-//    AntVelXNew = AntVelXOld + delta_t * ( -(1./TAU)*( AntVelXOld - ForceXvalue) )
-//    + delta_t * RandomWalkVelXnew * Turn_off_random;
-//    
-//    AntVelYNew = AntVelYOld + delta_t * ( -(1./TAU)*( AntVelYOld - ForceYvalue) )
-//    + delta_t * RandomWalkVelYnew * Turn_off_random;
+    AntVelXNew = AntVelXOld + delta_t * ( -(1./TAU)*( AntVelXOld - ForceXvalue) )
+    + delta_t * RandomWalkVelXnew * Turn_off_random;
+    
+    AntVelYNew = AntVelYOld + delta_t * ( -(1./TAU)*( AntVelYOld - ForceYvalue) )
+    + delta_t * RandomWalkVelYnew * Turn_off_random;
 
 //  Sem relaxa‹o:::
     
@@ -891,7 +882,6 @@ void AntWalk (int tt, int icurrent, double& AntXposOld, double& AntYposOld, doub
     ////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////
-//        cout << "Hi Force!  " << Radius(ForceXvalue,ForceYvalue) <<endl;
 }
 
 
@@ -1077,9 +1067,17 @@ int main (void){
 
     
     cout << COMM << endl;
-    cout << "Hi!  " << SENSING_AREA_RADIUS*0.6666*sin(SensingAreaHalfAngle)/SensingAreaHalfAngle <<endl;
 
 
+	my_matrix aaa(3,3);
+	my_matrix bbb(3,3);
+aaa(0,0) = 1.;aaa(1,0) = 1.;aaa(1,1) = 2.;
+bbb(0,0) = 2.;bbb(0,1) = 1.;bbb(2,2) = 2.;
+	aaa.print();
+	bbb.print();
+	my_matrix ccc(3,3);
+	ccc = aaa*10.;
+	ccc.print();
     
     return 0;
 }

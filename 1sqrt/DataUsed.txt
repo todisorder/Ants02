@@ -20,6 +20,6 @@ Tfinal (seconds) = 250
 Tfinal (minutes) = 4.16667
 Tfinal (hours) = 0.0694444
 ------------------------------------------------------
-Sensitivity Fucntion: max(c, c_*).
+Sensitivity Fucntion: Sqrt(c^2 + c_*^2).
 ------------------------------------------------------
  

@@ -66,7 +66,7 @@ static double const Turn_off_random = 1.*1.;    //*0.02;
 static double const RegularizingEpsilon = 0.01;
 
 //  This is pheromone detection threshold, but not exactly. It's complicated.
-static double const Threshold = 0.01; //   Explained in the Readme...   0.1
+static double const Threshold = 0.1; //   Explained in the Readme...
 
 
 //////////////////////////////////////////////////////
@@ -334,8 +334,8 @@ double SensitivityFunction(double c){
     double aux;
     
 //    aux = c;  SensitivityMethod = "Identity";
-//    aux = sqrt(c*c + Threshold*Threshold);  SensitivityMethod = "Sqrt(c^2 + c_*^2)";
-    aux = max(Threshold,c);     SensitivityMethod = "max(c, c_*)";
+    aux = sqrt(c*c + Threshold*Threshold);  SensitivityMethod = "Sqrt(c^2 + c_*^2)";
+//    aux = max(Threshold,c);     SensitivityMethod = "max(c, c_*)";
     
     return aux;
 }

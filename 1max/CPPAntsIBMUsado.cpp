@@ -66,7 +66,7 @@ static double const Turn_off_random = 1.*1.;    //*0.02;
 static double const RegularizingEpsilon = 0.01;
 
 //  This is pheromone detection threshold, but not exactly. It's complicated.
-static double const Threshold = 0.01; //   Explained in the Readme...   0.1
+static double const Threshold = 0.1; //   Explained in the Readme...
 
 
 //////////////////////////////////////////////////////

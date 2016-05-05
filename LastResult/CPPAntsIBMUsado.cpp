@@ -66,7 +66,7 @@ static double const Turn_off_random = 1.*1.;    //*0.02;
 static double const RegularizingEpsilon = 0.01;
 
 //  This is pheromone detection threshold, but not exactly. It's complicated.
-static double const Threshold = 0.1; //   Explained in the Readme...
+static double const Threshold = 0.01; //   Explained in the Readme...   0.1
 
 
 //////////////////////////////////////////////////////
@@ -169,6 +169,7 @@ static double const PheroHigh = 1.;
 ////////////////////////////
 int ChangedSide = 0;
 
+string SensitivityMethod;
 
 
 
@@ -332,9 +333,9 @@ double SensitivityFunction(double c){
     
     double aux;
     
-//    aux = c;
-    aux = sqrt(c*c + Threshold*Threshold);
-//    aux = max(Threshold,c);
+//    aux = c;  SensitivityMethod = "Identity";
+//    aux = sqrt(c*c + Threshold*Threshold);  SensitivityMethod = "Sqrt(c^2 + c_*^2)";
+    aux = max(Threshold,c);     SensitivityMethod = "max(c, c_*)";
     
     return aux;
 }
@@ -694,7 +695,8 @@ void PrintInfo(double delta_t, string COMM, int tt){
     tempfile << "Tfinal (minutes) = " << tt*delta_t * t_hat_in_seconds / 60.<< endl;
     tempfile << "Tfinal (hours) = " << tt*delta_t * t_hat_in_seconds / 3600.<< endl;
     tempfile << "------------------------------------------------------" << endl;
-    
+    tempfile << "Sensitivity Fucntion: "<< SensitivityMethod <<"." << endl;
+    tempfile << "------------------------------------------------------" << endl;
     tempfile << " " << endl;
     
     tempfile.close();

@@ -53,7 +53,7 @@ static double const Ln2 = 0.6931471806;
 
 default_random_engine generator;
 normal_distribution<double> Normal(0.,1.);      // Normal(0.,1.)
-normal_distribution<double> SmallNormal(0.,.05);      // Normal(0.,.1)
+normal_distribution<double> SmallNormal(0.,.1);      // (0.,.05)
 uniform_real_distribution<double> Uniform(0.,2.*Pi);      // Uniformly distributed angle
 //http://www.cplusplus.com/reference/random/normal_distribution/
 // Normal(mean,stddev)
@@ -64,6 +64,9 @@ static double const Turn_off_random = 1.*1.;    //*0.02;
 
 //	Parameter for Regularizing Function
 static double const RegularizingEpsilon = 0.01;
+
+//  This is pheromone detection threshold, but not exactly. It's complicated.
+static double const Threshold = 0.1; //   Explained in the Readme...
 
 
 //////////////////////////////////////////////////////
@@ -325,6 +328,17 @@ double Sinal(double aa){
     return 0.;
 }
 
+double SensitivityFunction(double c){
+    
+    double aux;
+    
+//    aux = c;
+    aux = sqrt(c*c + Threshold*Threshold);
+//    aux = max(Threshold,c);
+    
+    return aux;
+}
+
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -340,7 +354,7 @@ double PheromoneConcentration (double Xpos, double Ypos, Numerics data, my_matri
     double delta_y;
     delta_y = (y_2-y_1)/data.numyy;
     double aux = 0.;
-    double Threshold = 0.1; //   Explained in the Readme...
+
 	double iofXpos = (Xpos - x_1)/delta_x;  
 	double jofYpos = (Ypos - y_1)/delta_y;
     
@@ -353,7 +367,7 @@ double PheromoneConcentration (double Xpos, double Ypos, Numerics data, my_matri
 
 //    aux = 1.*exp(-PheroNarrow*abs(Xpos));
     
-    aux = max(Threshold,aux);   //  See readme...
+    aux = SensitivityFunction(aux);   //  See readme...
     
     return aux;
 

@@ -3,7 +3,7 @@
 #############################################################
 # dt = 0.05
 #	
-#Iter: 5000
+#Iter: 7000
 ------------------------------------------------------
 Space scale X_hat_in_cm (cm)       1.73
 Time scale t_hat_in_seconds (sec)       1
@@ -16,10 +16,10 @@ Domain in cm: = [-25 , 25] x [-50 , 50]
 Domain in X_hat: = [-14.4509 , 14.4509] x [-28.9017 , 28.9017]
 ------------------------------------------------------
 delta t (seconds) = 0.05
-Tfinal (seconds) = 250
-Tfinal (minutes) = 4.16667
-Tfinal (hours) = 0.0694444
+Tfinal (seconds) = 350
+Tfinal (minutes) = 5.83333
+Tfinal (hours) = 0.0972222
 ------------------------------------------------------
-Sensitivity Fucntion: max(c, c_*).
+Sensitivity Function: Sqrt(c^2 + c_*^2).
 ------------------------------------------------------
  

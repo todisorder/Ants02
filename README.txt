@@ -13,6 +13,7 @@ Entretanto passei para Ants04 (não Ants03) para fazer simulação coletiva.
 > Ou então substituir c por \sqrt{c^2 + eps^2}, é do mesmo tipo.
 > eps é o Threshold.
 > Também quero que o random seja diferente. Vai ser um acréscimo pequeno a F, aleatório numa pequena bola; ou seja, um theta uniforme em (0,2pi)e um r (ou um 1-r) normal em (0,r_0).
+> E o random é mesmo random, com seed da hora atual.
 
 >> Comecei a alterar matriz.h. O objetivo é interpolar o gradiente com um método least squares.
 	Para isso preciso de todas as operações em matrizes.

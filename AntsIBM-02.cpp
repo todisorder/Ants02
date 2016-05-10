@@ -6,7 +6,8 @@
 #include <sstream>
 #include <iomanip>  
 #include <random>
-
+#include <chrono>
+//ha ha ha 
 using namespace std;
 
 #include "matriz.h"
@@ -51,9 +52,13 @@ public:
 static double const Pi =  3.1415926535;
 static double const Ln2 = 0.6931471806;
 
-default_random_engine generator;
+// obtain a seed from the system clock:
+  unsigned seed1 = std::chrono::system_clock::now().time_since_epoch().count();
+
+
+default_random_engine generator(seed1);
 normal_distribution<double> Normal(0.,1.);      // Normal(0.,1.)
-normal_distribution<double> SmallNormal(0.,.1);      // (0.,.05)
+normal_distribution<double> SmallNormal(0.,.05);      // (0.,.05)
 uniform_real_distribution<double> Uniform(0.,2.*Pi);      // Uniformly distributed angle
 //http://www.cplusplus.com/reference/random/normal_distribution/
 // Normal(mean,stddev)
@@ -66,7 +71,7 @@ static double const Turn_off_random = 1.*1.;    //*0.02;
 static double const RegularizingEpsilon = 0.01;
 
 //  This is pheromone detection threshold, but not exactly. It's complicated.
-static double const Threshold = 0.01; //   Explained in the Readme...   0.1
+static double const Threshold = 0.05; //   Explained in the Readme...   0.1
 
 
 //////////////////////////////////////////////////////
@@ -231,6 +236,7 @@ void define_trail (int xx,int yy, my_matrix trail)
     double value = 300.;
     my_matrix temptop(xx,yy); // temptop.matrix("zero");
     double Xpos;
+    double Ypos;
     
     
     //    Random trail         // http://www.cplusplus.com/reference/cstdlib/rand/?kw=rand
@@ -292,7 +298,9 @@ void define_trail (int xx,int yy, my_matrix trail)
         for(int k=0;k<yy;k++){
 //            trail(j,k) = 0.;        //Para testar com zero
             Xpos = x_1 + j*delta_x;
-            trail(j,k) = 1.*exp(-PheroNarrow*abs(Xpos)) * trail(j,k);
+            Ypos = y_1 + k*delta_y;
+//            trail(j,k) = 1.*exp(-PheroNarrow*abs(Xpos)) * trail(j,k);
+            trail(j,k) = 1.*exp(-PheroNarrow*abs(Xpos - 1.*sin(Ypos*0.3))) * trail(j,k);
         }
     }
 }
@@ -334,8 +342,8 @@ double SensitivityFunction(double c){
     double aux;
     
 //    aux = c;  SensitivityMethod = "Identity";
-//    aux = sqrt(c*c + Threshold*Threshold);  SensitivityMethod = "Sqrt(c^2 + c_*^2)";
-    aux = max(Threshold,c);     SensitivityMethod = "max(c, c_*)";
+    aux = sqrt(c*c + Threshold*Threshold);  SensitivityMethod = "Sqrt(c^2 + c_*^2)";
+ //   aux = max(Threshold,c);     SensitivityMethod = "max(c, c_*)";
     
     return aux;
 }
@@ -695,7 +703,7 @@ void PrintInfo(double delta_t, string COMM, int tt){
     tempfile << "Tfinal (minutes) = " << tt*delta_t * t_hat_in_seconds / 60.<< endl;
     tempfile << "Tfinal (hours) = " << tt*delta_t * t_hat_in_seconds / 3600.<< endl;
     tempfile << "------------------------------------------------------" << endl;
-    tempfile << "Sensitivity Fucntion: "<< SensitivityMethod <<"." << endl;
+    tempfile << "Sensitivity Function: "<< SensitivityMethod <<"." << endl;
     tempfile << "------------------------------------------------------" << endl;
     tempfile << " " << endl;
     
@@ -797,8 +805,10 @@ void AntWalk (int tt, int icurrent, double& AntXposOld, double& AntYposOld, doub
     // rather a random perturbation:
     // Also, it goes inside the 1/tau. It is a change to
     //  the desired velocity.
-    double RandomAngle = Uniform(generator);;
+    double RandomAngle = Uniform(generator);
+//    Uniform.reset();
     double Rzero = SmallNormal(generator);
+  //  SmallNormal.reset();
 
     RandomWalkVelXnew = Rzero * cos(RandomAngle);
     RandomWalkVelYnew = Rzero * sin(RandomAngle);
@@ -1012,6 +1022,16 @@ int main (void){
     AntDistance << "###  Units are X_hat = " << X_hat_in_cm << "cm." << endl;
     AntDistance << 0. <<"\t" << 0. << endl;
 
+    ofstream AntPosX(DIR2+"AntPosX.txt");
+    
+    AntPosX << "###  Units are X_hat = " << X_hat_in_cm << "cm." << endl;
+    AntPosX << 0.<< "\t" << AntXposOld  << endl;
+
+    ofstream AntPosY(DIR2+"AntPosY.txt");
+    
+    AntPosY << "###  Units are X_hat = " << X_hat_in_cm << "cm." << endl;
+    AntPosY << 0.<< "\t" << AntYposOld  << endl;
+
     /////////////////////////////
     // Ciclo em tempo
     /////////////////////////////
@@ -1045,6 +1065,8 @@ int main (void){
         AntVelAngle << Angle(AntVelXOld,AntVelYOld) << endl;
         AntVelRadius << Radius(AntVelXOld,AntVelYOld) << endl;
         AntDistance << i*delta_t << "\t" << TotalDistanceInCm << endl;
+        AntPosX << i*delta_t << "\t" << AntXposOld << endl;
+        AntPosY << i*delta_t << "\t" << AntYposOld << endl;
     }
     /////////////////////////////
     // End Ciclo em tempo

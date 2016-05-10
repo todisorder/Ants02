@@ -18,6 +18,12 @@ plot "AntVelAngle.txt"
 set term png font "arial,12"  size  600, 600
 set output "./Plots/AntDistance.png"
 plot "AntDistance.txt"
+set term png font "arial,12"  size  600, 600
+set output "./Plots/AntPosX.png"
+plot "AntPosX.txt"
+set term png font "arial,12"  size  600, 600
+set output "./Plots/AntPosY.png"
+plot "AntPosY.txt"
 
 #http://stackoverflow.com/questions/33774180/transparent-background-picture-and-the-color-of-certain-points
 # De:::::
